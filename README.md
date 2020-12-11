@@ -9,7 +9,7 @@ This game uses most features of the game server with our official [Unity client]
 
 Full server documentation is online - https://heroiclabs.com/docs
 
-## Getting Started
+## Getting Started 
 
 You'll need to setup Unity engine and install Docker engine with our [quickstart guide](https://heroiclabs.com/docs/install-docker-quickstart) for the fastest development experience.
 
