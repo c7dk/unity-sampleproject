@@ -120,29 +120,25 @@ namespace Nakama
             }
             else if (www.isHttpError)
             {
-            var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
+                var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
 
-            ///////////////////////////////////////////////
-            // Previous code assumed "error" exists. 
-            // Hack: As of Jan 04, 2021, the error appears instead in "message" - srivello
-            object errorMessage = "";
-            if (!decoded.TryGetValue("error", out errorMessage))
-            {
-               if (!decoded.TryGetValue("message", out errorMessage))
-               {
-                  Debug.Log("The 'decoded' object contains no expected 'error' object. Fix.");
-               }
-            }
-            ///////////////////////////////////////////////
+                ApiResponseException e = new ApiResponseException(www.downloadHandler.text);
 
-            errback(decoded == null
-                    ? new ApiResponseException(www.downloadHandler.text)
-                    : new ApiResponseException(www.responseCode, errorMessage.ToString(), (int) decoded["code"]));
+                if (decoded != null)
+                {
+                    e = new ApiResponseException(www.responseCode, decoded["message"].ToString(), (int) decoded["code"]);
 
+                    if (decoded.ContainsKey("error"))
+                    {
+                        _instance.CopyResponseError(decoded["error"], e);
+                    }
+                }
+
+                errback(e);
             }
             else
             {
-                callback?.Invoke(www.downloadHandler.text);
+                callback?.Invoke(www.downloadHandler?.text);
             }
         }
     }
