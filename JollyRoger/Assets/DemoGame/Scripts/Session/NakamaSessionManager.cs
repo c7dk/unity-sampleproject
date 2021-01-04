@@ -70,16 +70,18 @@ namespace DemoGame.Scripts.Session
 
         #region Debug
 
-        [Header("Debug")]
+        [Header("Debug (See Tooltips)")]
+        [Tooltip ("If true, stored session authentication token and device id will be erased on start")]
         /// <summary>
         /// If true, stored session authentication token and device id will be erased on start
         /// </summary>
         [SerializeField] private bool _erasePlayerPrefsOnStart = false;
 
+        [Tooltip("Sufix added to '_deviceId'to generate new device id. Do set this before building to 'Play against yourself'")]
         /// <summary>
         /// Sufix added to <see cref="_deviceId"/> to generate new device id.
         /// </summary>
-        [SerializeField] private string _sufix = string.Empty;
+        [SerializeField] private string _suffix = string.Empty;
 
         #endregion
 
@@ -523,7 +525,7 @@ namespace DemoGame.Scripts.Session
 #endif                    
                     PlayerPrefs.SetString("nakama.deviceId", _deviceId);
                 }
-                _deviceId += _sufix;
+                _deviceId += _suffix;
             }
         }
 
