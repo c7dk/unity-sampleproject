@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+#pragma warning disable 0109 // The member 'NormalsReplacementShader.camera' does not hide an accessible member. The new keyword is not required.
+
 public class NormalsReplacementShader : MonoBehaviour
 {
     [SerializeField] private Shader normalsShader = null;
