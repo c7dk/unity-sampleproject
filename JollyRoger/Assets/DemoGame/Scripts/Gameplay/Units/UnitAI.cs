@@ -65,10 +65,15 @@ namespace DemoGame.Scripts.Gameplay.Units
                             SendAttackRequest(_enemy, _unit.Damage, _unit.AttackType);
                         }
                     }
+
+
                     if (_unit.CanMove)
                     {
                         FindAndSetEnemy();
-                        if (!_unit.CurrentNode.ConnectedNodes.ContainsKey(_enemy.CurrentNode))
+
+                        // Nullcheck to help with end of game
+                        if (_unit != null && _enemy != null && 
+                        !_unit.CurrentNode.ConnectedNodes.ContainsKey(_enemy.CurrentNode))
                         {
                             Node nextNode = SelectNextNode();
                             if (nextNode)
