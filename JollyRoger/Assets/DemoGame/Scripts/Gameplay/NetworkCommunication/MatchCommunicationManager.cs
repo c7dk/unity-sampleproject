@@ -34,6 +34,9 @@ namespace DemoGame.Scripts.Gameplay.NetworkCommunication
     /// </summary>
     public class MatchCommunicationManager : Singleton<MatchCommunicationManager>
     {
+         //TODO: Hack: Added to prevent Unity "Main Thread Required" runtime errors - srivello
+         private static bool UseUnityMainThreadDispatcher = true;
+
         /// <summary>
         /// Number of players required to start match.
         /// </summary>
@@ -604,10 +607,20 @@ namespace DemoGame.Scripts.Gameplay.NetworkCommunication
                 return;
             }
 
-            ReceiveMatchStateHandle(matchState.OpCode, messageJson);
-        }
+            if (UseUnityMainThreadDispatcher)
+            {
+               UnityMainThreadDispatcher.Instance().Enqueue(() =>
+               {
+                  ReceiveMatchStateHandle(matchState.OpCode, messageJson);
+               });
+            }
+            else
+            {
+               ReceiveMatchStateHandle(matchState.OpCode, messageJson);
+            }
+      }
 
-        #endregion
-    }
+      #endregion
+   }
 
 }
