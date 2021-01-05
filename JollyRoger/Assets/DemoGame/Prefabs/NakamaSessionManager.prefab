@@ -44,10 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a2e429616978f2498774d9c7706e8d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ipAddress: 127.0.0.1
+  _ipAddress: 192.168.1.126
   _port: 7350
+  _isDebug: 1
   _erasePlayerPrefsOnStart: 0
-  _sufix: 
+  _suffixForDeviceId: 
+  _useRandomizedDeviceId: 1
 --- !u!1001 &478750047962757780
 PrefabInstance:
   m_ObjectHideFlags: 0

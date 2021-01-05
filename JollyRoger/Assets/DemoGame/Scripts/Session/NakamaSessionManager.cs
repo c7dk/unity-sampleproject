@@ -70,33 +70,45 @@ namespace DemoGame.Scripts.Session
 
         #region Debug
 
-        [Header("Debug (See Tooltips)")]
+         [Header("Debug (See Tooltips)")]
+         [Tooltip("If false, values below are ignored.")]
+         /// <summary>
+         /// If false, values below are ignored.
+         /// </summary>
+         [SerializeField] private bool _isDebug = false;
+
         [Tooltip ("If true, stored session authentication token and device id will be erased on start")]
         /// <summary>
         /// If true, stored session authentication token and device id will be erased on start
         /// </summary>
         [SerializeField] private bool _erasePlayerPrefsOnStart = false;
 
-        [Tooltip("Sufix added to '_deviceId'to generate new device id. Do set this before building to 'Play against yourself'")]
+        [Tooltip("Suffix added to '_deviceId' to generate new device id. Populate uniquely to 'play against yourself'.")]
         /// <summary>
-        /// Sufix added to <see cref="_deviceId"/> to generate new device id.
+        /// SufFix added to <see cref="_deviceId"/> to generate new device id.
         /// </summary>
-        [SerializeField] private string _suffix = string.Empty;
+        [SerializeField] private string _suffixForDeviceId = string.Empty;
 
-        #endregion
+         [Tooltip("Random string added to '_deviceId' to generate new device id. Set true, to 'play against yourself'.")]
+         /// <summary>
+         /// Random string added to <see cref="_deviceId"/> to generate new device id.
+         /// </summary>
+         [SerializeField] private bool _useRandomizedDeviceId = false;
 
-        #endregion
+      #endregion
 
-        #region Properties
+      #endregion
 
-        /// <summary>
-        /// Used to communicate with Nakama server.
-        /// For the user to send and receive messages from the server, <see cref="Session"/> must not be expired.
-        /// Default expiration time is 60s, but for this demo we set it to 3 weeks (1 814 400 seconds).
-        /// To initialize the session, call <see cref="AuthenticateDeviceIdAsync"/> or <see cref="AuthenticateFacebookAsync"/> methods.
-        /// To reinitialize expired session, call <see cref="Reauthenticate"/> method.
-        /// </summary>
-        public ISession Session { get; private set; }
+      #region Properties
+
+      /// <summary>
+      /// Used to communicate with Nakama server.
+      /// For the user to send and receive messages from the server, <see cref="Session"/> must not be expired.
+      /// Default expiration time is 60s, but for this demo we set it to 3 weeks (1 814 400 seconds).
+      /// To initialize the session, call <see cref="AuthenticateDeviceIdAsync"/> or <see cref="AuthenticateFacebookAsync"/> methods.
+      /// To reinitialize expired session, call <see cref="Reauthenticate"/> method.
+      /// </summary>
+      public ISession Session { get; private set; }
 
         /// <summary>
         /// Contains all the identifying data of a <see cref="Client"/>, like User Id, linked Device IDs,
@@ -193,7 +205,7 @@ namespace DemoGame.Scripts.Session
         {
             DontDestroyOnLoad(gameObject);
 
-            if (_erasePlayerPrefsOnStart == true)
+            if (_isDebug && _erasePlayerPrefsOnStart == true)
             {
                 PlayerPrefs.SetString("nakama.authToken", "");
                 PlayerPrefs.SetString("nakama.deviceId", "");
@@ -525,7 +537,18 @@ namespace DemoGame.Scripts.Session
 #endif                    
                     PlayerPrefs.SetString("nakama.deviceId", _deviceId);
                 }
-                _deviceId += _suffix;
+
+               if (_isDebug && !string.IsNullOrEmpty(_suffixForDeviceId))
+               {
+                  _deviceId += string.Format("_Suffix_{0:000}", _suffixForDeviceId);
+                  Debug.Log($"Debug={_isDebug}, _deviceId={_deviceId}.");
+               }
+
+               if (_isDebug && _useRandomizedDeviceId)
+               {
+                  _deviceId += string.Format("_Random_{0:000}", UnityEngine.Random.Range(10000, 99999));
+                  Debug.Log($"Debug={_isDebug}, _deviceId={_deviceId}.");
+               }
             }
         }
 
